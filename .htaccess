@@ -1,5 +1,0 @@
-
-Options +FollowSymlinks
-RewriteEngine on
-RewriteCond %{HTTP_HOST} ^.cteamresearch.com [NC]
-RewriteRule ^(.*)$ http://www.cteamresearch.com/$1 [R=301,NC]

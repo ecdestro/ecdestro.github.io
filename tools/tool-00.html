@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}} — C Team Research</title>
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script defer src="../assets/js/main.js"></script>
+    <!-- Add any tool-specific styles or scripts here -->
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../index.html" class="brand-title">Researcher's Log</a>
+            <nav class="site-nav">
+                <a href="../index.html#tools" class="nav-link">&larr; Back to Tools</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="content-section">
+            <div class="card-meta" style="margin-bottom: 1rem;">
+                <span class="tag">{{TAG}}</span>
+            </div>
+            
+            <h1 style="font-size: 2rem; margin-bottom: 1.5rem; letter-spacing: -0.02em;">{{TITLE}}</h1>
+            
+            <!-- Tool Sandbox Area -->
+            <div id="tool-app" style="background-color: var(--surface-color); border: 1px solid var(--surface-border); border-radius: var(--radius); padding: 2rem; min-height: 300px;">
+                <p style="color: var(--text-secondary);">Tool interface goes here...</p>
+            </div>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; <span id="year"></span> — Built with Vanilla HTML/CSS/JS</p>
+            <p><a href="https://github.com/ecdestro" target="_blank" rel="noopener">GitHub Profile</a></p>
+        </div>
+    </footer>
+
+</body>
+</html>

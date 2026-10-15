@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic HTML Table Generator — C Team Research</title>
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script defer src="../assets/js/main.js"></script>
+    <style>
+        .tool-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--surface-border);
+        }
+        .tool-controls label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+        }
+        .tool-controls input {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            color: var(--text-primary);
+            padding: 0.4rem 0.6rem;
+            border-radius: 4px;
+            width: 70px;
+            font-family: var(--font-mono);
+        }
+        .btn {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+        .table-grid-editor {
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+        .grid-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .grid-table th, .grid-table td {
+            border: 1px solid var(--surface-border);
+            padding: 0.5rem;
+        }
+        .grid-table input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+        }
+        .grid-table input:focus {
+            outline: 1px solid var(--accent-color);
+        }
+        .output-box {
+            background: var(--code-bg);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent-color);
+            white-space: pre-wrap;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../index.html" class="brand-title">Researcher's Log</a>
+            <nav class="site-nav">
+                <a href="../index.html#tools" class="nav-link">&larr; Back to Tools</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="content-section">
+            <div class="card-meta" style="margin-bottom: 1rem;">
+                <span class="tag">Utility</span>
+            </div>
+            
+            <h1 style="font-size: 2rem; margin-bottom: 1.5rem; letter-spacing: -0.02em;">Dynamic HTML Table Generator</h1>
+            
+            <div style="color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 1.5rem;">
+                <p>Configure rows and columns, type your data into the grid, and instantly generate clean HTML markup.</p>
+            </div>
+
+            <!-- Controls -->
+            <div class="tool-controls">
+                <div>
+                    <label for="rows-input">Rows:</label>
+                    <input type="number" id="rows-input" value="3" min="1" max="20">
+                </div>
+                <div>
+                    <label for="cols-input">Columns:</label>
+                    <input type="number" id="cols-input" value="3" min="1" max="10">
+                </div>
+                <button class="btn" id="generate-grid-btn">Build Grid</button>
+            </div>
+
+            <!-- Editable Grid Area -->
+            <div class="table-grid-editor">
+                <table id="editor-table" class="grid-table">
+                    <!-- Dynamically populated -->
+                </table>
+            </div>
+
+            <button class="btn" id="export-btn" style="margin-bottom: 1.5rem;">Generate HTML Output</button>
+
+            <!-- Output Code -->
+            <h2 style="font-size: 1.2rem; margin-bottom: 0.5rem; font-family: var(--font-mono);">HTML Markup</h2>
+            <div id="html-output" class="output-box">&lt;!-- Click 'Generate HTML Output' to see code --&gt;</div>
+            <button class="btn" id="copy-btn" style="background: var(--surface-color); color: var(--text-primary); border: 1px solid var(--surface-border);">Copy to Clipboard</button>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>&copy; <span id="year"></span> — Built with Vanilla HTML/CSS/JS</p>
+            <p><a href="https://github.com/ecdestro" target="_blank" rel="noopener">GitHub Profile</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rowsInput = document.getElementById('rows-input');
+            const colsInput = document.getElementById('cols-input');
+            const buildBtn = document.getElementById('generate-grid-btn');
+            const editorTable = document.getElementById('editor-table');
+            const exportBtn = document.getElementById('export-btn');
+            const htmlOutput = document.getElementById('html-output');
+            const copyBtn = document.getElementById('copy-btn');
+
+            function buildGrid() {
+                const rows = parseInt(rowsInput.value) || 3;
+                const cols = parseInt(colsInput.value) || 3;
+                editorTable.innerHTML = '';
+
+                for (let r = 0; r < rows; r++) {
+                    const tr = document.createElement('tr');
+                    for (let c = 0; c < cols; c++) {
+                        const cell = document.createElement(r === 0 ? 'th' : 'td');
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.value = r === 0 ? `Header ${c + 1}` : `Data ${r},${c + 1}`;
+                        cell.appendChild(input);
+                        tr.appendChild(cell);
+                    }
+                    editorTable.appendChild(tr);
+                }
+            }
+
+            function generateHTML() {
+                const trs = editorTable.querySelectorAll('tr');
+                if (trs.length === 0) return;
+
+                let html = '<table>\n  <thead>\n    <tr>\n';
+                
+                // Process header row
+                const headers = trs[0].querySelectorAll('input');
+                headers.forEach(input => {
+                    html += `      <th>${escapeHtml(input.value)}</th>\n`;
+                });
+                html += '    </tr>\n  </thead>\n  <tbody>\n';
+
+                // Process body rows
+                for (let i = 1; i < trs.length; i++) {
+                    html += '    <tr>\n';
+                    const cells = trs[i].querySelectorAll('input');
+                    cells.forEach(input => {
+                        html += `      <td>${escapeHtml(input.value)}</td>\n`;
+                    });
+                    html += '    </tr>\n';
+                }
+                html += '  </tbody>\n</table>';
+
+                htmlOutput.textContent = html;
+            }
+
+            function escapeHtml(str) {
+                return str.replace(/&/g, "&amp;")
+                          .replace(/</g, "&lt;")
+                          .replace(/>/g, "&gt;")
+                          .replace(/"/g, "&quot;")
+                          .replace(/'/g, "&#039;");
+            }
+
+            buildBtn.addEventListener('click', buildGrid);
+            exportBtn.addEventListener('click', generateHTML);
+
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(htmlOutput.textContent).then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => copyBtn.textContent = originalText, 2000);
+                });
+            });
+
+            // Initialize default grid on load
+            buildGrid();
+        });
+    </script>
+</body>
+</html>
